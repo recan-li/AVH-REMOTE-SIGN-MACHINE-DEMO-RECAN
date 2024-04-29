@@ -106,9 +106,9 @@ int rsa_data_sign_only(const unsigned char *digest, size_t digest_len, unsigned 
     size_t keylen = strlen((char *) g_private_key_pem);
     // 解析私钥
     ret = mbedtls_pk_parse_key(&pk, g_private_key_pem, keylen+1, NULL, 0);
-
+    printf("%d %p\n", strlen(g_private_key_pem), g_private_key_pem);
     if (ret != 0) {
-        ESP_LOGI(TAG, "pass private key error");
+        ESP_LOGI(TAG, "pass private key error %d %x", keylen, -ret);
     } else {
         ESP_LOGI(TAG, "pass private key success"); 
         ret = mbedtls_pk_sign( &pk, MBEDTLS_MD_NONE,
@@ -172,23 +172,7 @@ void app_rsa_main(void)
     size_t encrypted_len = 256;
     unsigned char *decrypted = NULL;;
     size_t decrypted_len = 256;
-
-    g_public_key_pem = g_id_rsa_public_key;
-    g_private_key_pem = g_id_rsa_private_key;
-
-    CRYPTO_Init();
-
-    mbedtls_platform_setup(NULL);
-
-    mbedtls_ctr_drbg_init(&ctr_drbg);
-    mbedtls_entropy_init(&entropy);
-
-    if (mbedtls_ctr_drbg_seed(&ctr_drbg, mbedtls_entropy_func, &entropy, NULL, 0) != 0) {
-        // Handle error
-        ESP_LOGI(TAG, "random init error");
-        ret = -1;
-    }
-
+    
     plaintext = (const unsigned char *) "Hello, RSA!";
     plaintext_len = strlen((const char *) plaintext);
 
@@ -220,4 +204,33 @@ void app_rsa_main(void)
 
     //mbedtls_ctr_drbg_free(&ctr_drbg);
     //mbedtls_entropy_free(&entropy);
+}
+
+
+int user_rsa_api_init(void)
+{
+    int ret = 0;
+
+    g_public_key_pem = g_id_rsa_public_key;
+    g_private_key_pem = g_id_rsa_private_key;
+    printf("%d %d %p %p\n", strlen(g_public_key_pem), strlen(g_private_key_pem), g_public_key_pem, g_id_rsa_private_key);
+
+    CRYPTO_Init();
+
+    mbedtls_platform_setup(NULL);
+
+    mbedtls_ctr_drbg_init(&ctr_drbg);
+    mbedtls_entropy_init(&entropy);
+
+    if (mbedtls_ctr_drbg_seed(&ctr_drbg, mbedtls_entropy_func, &entropy, NULL, 0) != 0) {
+        // Handle error
+        ESP_LOGI(TAG, "random init error");
+        ret = -1;
+    }
+
+    mbedtls_platform_teardown(NULL);
+
+    app_rsa_main();
+
+    return ret;
 }

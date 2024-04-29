@@ -10,6 +10,12 @@
 #include "aws_demo.h"
 #include "aws_demo_config.h"
 
+static int arm_avh_hello_world(void)
+{
+    printf("\n\nHello world @ Arm-AVH ...\n\n\n");
+    return 0;
+}
+
 /* Forward declaration of demo entry function to be renamed from #define in
  * aws_demo_config.h */
 int DEMO_entryFUNCTION( bool awsIotMqttMode,
@@ -20,13 +26,15 @@ int DEMO_entryFUNCTION( bool awsIotMqttMode,
 {
     int cnt = 0;
 
-    extern void app_rsa_main(void);
-    app_rsa_main();
+    extern int user_rsa_api_init(void);
+    user_rsa_api_init();
+
+    //return arm_avh_hello_world();
 
     const char *argv[] = 
     {
         "tcp_server",
-        "12345",
+        "12346",
     };
     extern int tcp_server_main(int argc, const char *argv[]);
     return tcp_server_main(2, argv);

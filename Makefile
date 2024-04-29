@@ -37,14 +37,14 @@ build:
 	@echo "Building ..."
 	@test -e $(OUT_PATH) || mkdir -p $(OUT_PATH)
 	/opt/ctools/bin/cbuild --packs $(MQTT_DEMO_PATH)/VHT_MPS2_Cortex-M7.cprj -v=$(V)
-	@if [[ -e $(MQTT_DEMO_PATH)/Objects/image.axf ]]; then\
-		cp -rf $(MQTT_DEMO_PATH)/Objects/image.axf $(MQTT_DEMO_PATH)/Objects/image.elf;\
+	@if [[ -e $(MQTT_DEMO_PATH)/Objects/image.elf ]]; then\
+		cp -rf $(MQTT_DEMO_PATH)/Objects/image.elf $(MQTT_DEMO_PATH)/Objects/image.axf;\
 	fi
-	@cp -rf $(MQTT_DEMO_PATH)/Objects/image.elf $(OUT_PATH)
+	@cp -rf $(MQTT_DEMO_PATH)/Objects/image.axf $(OUT_PATH)
 
 run:
 	@echo "Running ..."
-	/opt/VHT/bin/FVP_MPS2_Cortex-M7 --stat --simlimit $(AVH_SIMLIMIT_TIME) -f $(MQTT_DEMO_PATH)/vht_config.txt $(OUT_PATH)/image.elf
+	/opt/VHT/bin/FVP_MPS2_Cortex-M7 --stat --simlimit $(AVH_SIMLIMIT_TIME) -f $(MQTT_DEMO_PATH)/vht_config.txt $(OUT_PATH)/image.axf
 
 clean:
 	@echo "Clean ..."

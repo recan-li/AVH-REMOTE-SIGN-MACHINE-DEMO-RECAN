@@ -128,17 +128,17 @@ def verify_signed_file(signed_file_path):
 		print("Signature verification failed.")
 		return False
 
-def run_elf_file(elf_file):
-	is_verify_ok = verify_signed_file(elf_file)
+def run_axf_file(axf_file):
+	is_verify_ok = verify_signed_file(axf_file)
 	if is_verify_ok:
-		print("Verify ok, begin to run elf file ...")
-		cmd = "/opt/VHT/bin/FVP_MPS2_Cortex-M7 --stat --simlimit 8000 -f ../AVH-CM7/vht_config.txt " + elf_file
+		print("Verify ok, begin to run axf file ...")
+		cmd = "/opt/VHT/bin/FVP_MPS2_Cortex-M7 --stat --simlimit 8000 -f ../AVH-CM7/vht_config.txt " + axf_file
 		os.system(cmd)
 	else:
-		print("Verify fail, stop to run elf file ...")
+		print("Verify fail, stop to run axf file ...")
 
 def help():
-	print("Usage: python " + sys.argv[0] + " [sign | verify] <file_path>")
+	print("Usage: python " + sys.argv[0] + " [sign | verify | run] <file_path>")
 
 if __name__ == "__main__":
 	if len(sys.argv) < 3:
@@ -156,8 +156,8 @@ if __name__ == "__main__":
 		signed_file_path = sys.argv[2]
 		verify_signed_file(signed_file_path)
 	elif operation == "run":
-		elf_file = sys.argv[2]
-		run_elf_file(elf_file)
+		axf_file = sys.argv[2]
+		run_axf_file(axf_file)
 	else:
 		help()
 		sys.exit(1)

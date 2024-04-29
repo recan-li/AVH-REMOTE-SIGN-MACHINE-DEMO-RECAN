@@ -31,8 +31,8 @@ def build(config, results):
     file = f"aws_mqtt-{config.target[0].lower()}-{timestamp()}.zip"
     logging.info(f"Archiving build output to {file}...")
     with ZipFile(file, "w") as archive:
-        archive.write(f"Objects/image.elf")
-        archive.write(f"Objects/image.elf.map")
+        archive.write(f"Objects/image.axf")
+        archive.write(f"Objects/image.axf.map")
         archive.write(f"Objects/AWS_MQTT_MutualAuth.{config.target[1]}.clog")
 
 
@@ -57,7 +57,7 @@ def run_cbuild(config):
 
 @matrix_command(test_report=ConsoleReport())
 def run_vht(config):
-    return ["VHT_MPS2_Cortex-M7", "--stat", "--simlimit", "850", "-f", "vht_config.txt", "Objects/image.elf"]
+    return ["VHT_MPS2_Cortex-M7", "--stat", "--simlimit", "850", "-f", "vht_config.txt", "Objects/image.axf"]
 
 
 if __name__ == "__main__":
